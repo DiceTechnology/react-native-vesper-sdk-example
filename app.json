@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "test-react-native-vesper-sdk",
+    "slug": "test-react-native-vesper-sdk",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.testreactnativevespersdk"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "extraMavenRepos": [
+        "https://muxinc.jfrog.io/artifactory/default-maven-release-local",
+        {
+          "url": "https://jitpack.io",
+          "credentials": {
+            "username": "<AUTH_TOKEN>"
+          }
+        }
+      ],
+      "package": "com.anonymous.testreactnativevespersdk"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.0",
+          },
+        },
+      ],
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+  }
+}
