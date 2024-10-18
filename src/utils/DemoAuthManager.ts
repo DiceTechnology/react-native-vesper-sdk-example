@@ -29,16 +29,20 @@ class DemoAuthManager implements AuthManager {
         });
 
         const json = await response.json();
-
-        this._authToken = json.authorisationToken;
-        this._refreshToken = json.refreshToken;
-
-        console.info(`Logged in with '${id}'!`);
+    
+        if (response.ok) {
+            this._authToken = json.authorisationToken;
+            this._refreshToken = json.refreshToken;
+            console.info(`Logged in with '${id}'!`);
+        } else {
+            throw new Error(`Failed to log in! ${json.code} - ${json.messages.join()}`)
+        }
     }
 
     public async getAuthToken(): Promise<string> {
         console.info(`Requesting auth token...`);
         if (!this._authToken) {
+            console.error('Login first!');
             throw new Error('Login first!');
         }
         return this._authToken;
@@ -47,6 +51,7 @@ class DemoAuthManager implements AuthManager {
     public async getRefreshToken(): Promise<string> {
         console.info(`Requesting refresh token...`);
         if (!this._refreshToken) {
+            console.error('Login first!');
             throw new Error('Login first!');
         }
         return this._refreshToken;
@@ -54,7 +59,33 @@ class DemoAuthManager implements AuthManager {
 
     public async refreshAuthToken(authToken: string): Promise<string> {
         console.info(`Requesting auth token refresh...`);
-        throw new Error('Refresh flow not implemented!')
+        
+        const response = await fetch("https://dce-frontoffice.imggaming.com/api/v2/token/refresh", {
+            "headers": {
+                "accept": "application/json, text/plain, */*",
+                "app": "dice",
+                "authorization": `Bearer ${authToken}`,
+                "content-type": "application/json",
+                "realm": process.env.PUBLIC_REALM,
+                "x-api-key": process.env.PUBLIC_API_KEY,
+            },
+            "body": JSON.stringify({
+                refreshToken: this._refreshToken
+            }),
+            "method": "POST",
+            "mode": "cors"
+        });
+        
+        const json = await response.json();
+
+        this._authToken = json.authorisationToken;
+        if (!this._authToken) {
+            console.error('Invalid API response!');
+            throw new Error('Invalid API response!');
+        }
+
+        console.info(`Token refreshed!`);
+        return this._authToken;
     }
 }
 

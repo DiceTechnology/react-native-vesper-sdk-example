@@ -28,6 +28,8 @@ function App(): React.JSX.Element {
         process.env.PUBLIC_PASSWORD
       ).then(() => {
         setIsLoggedIn(true);
+      }, (error) => {
+        console.error(error.message);
       });
     }
   }, []);
