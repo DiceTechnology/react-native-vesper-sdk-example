@@ -1,0 +1,39 @@
+buildscript {
+    ext {
+        buildToolsVersion = "34.0.0"
+        minSdkVersion = 23
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        ndkVersion = "26.1.10909125"
+        kotlinVersion = "1.9.24"
+    }
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.android.tools.build:gradle")
+        classpath("com.facebook.react:react-native-gradle-plugin")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            // Mux repository
+            url "https://muxinc.jfrog.io/artifactory/default-maven-release-local"
+            content {
+                includeGroupByRegex "com\\.mux.*"
+            }
+        }
+        maven {
+            url "https://jitpack.io"
+            credentials { username authToken }
+        }
+    }
+}
+
+apply plugin: "com.facebook.react.rootproject"
