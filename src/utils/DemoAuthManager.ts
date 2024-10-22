@@ -1,4 +1,6 @@
 import { AuthManager } from "@dicetechnology/react-native-vesper-sdk";
+import Config from 'react-native-config';
+import { getApiBaseUrl } from "./getApiBaseUrl";
 
 class DemoAuthManager implements AuthManager {
     private _authToken?: string;
@@ -12,13 +14,15 @@ class DemoAuthManager implements AuthManager {
 
         console.info(`Logging in with '${id}'...`);
 
-        const response = await fetch("https://dce-frontoffice.imggaming.com/api/v2/login", {
+        const baseUrl = getApiBaseUrl(Config.PUBLIC_ENV);
+
+        const response = await fetch(`${baseUrl}/login`, {
             "headers": {
                 "accept": "application/json, text/plain, */*",
                 "app": "dice",
                 "content-type": "application/json",
-                "realm": process.env.PUBLIC_REALM,
-                "x-api-key": process.env.PUBLIC_API_KEY,
+                "realm": Config.PUBLIC_REALM,
+                "x-api-key": Config.PUBLIC_API_KEY,
             },
             "body": JSON.stringify({
                 id,
@@ -59,15 +63,17 @@ class DemoAuthManager implements AuthManager {
 
     public async refreshAuthToken(authToken: string): Promise<string> {
         console.info(`Requesting auth token refresh...`);
+
+        const baseUrl = getApiBaseUrl(Config.PUBLIC_ENV);
         
-        const response = await fetch("https://dce-frontoffice.imggaming.com/api/v2/token/refresh", {
+        const response = await fetch(`${baseUrl}/token/refresh`, {
             "headers": {
                 "accept": "application/json, text/plain, */*",
                 "app": "dice",
                 "authorization": `Bearer ${authToken}`,
                 "content-type": "application/json",
-                "realm": process.env.PUBLIC_REALM,
-                "x-api-key": process.env.PUBLIC_API_KEY,
+                "realm": Config.PUBLIC_REALM,
+                "x-api-key": Config.PUBLIC_API_KEY,
             },
             "body": JSON.stringify({
                 refreshToken: this._refreshToken
