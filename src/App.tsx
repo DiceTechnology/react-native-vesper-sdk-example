@@ -47,7 +47,7 @@ function App(): React.JSX.Element {
           const config: VesperSdkConfig = {
             apiConfig: {
               apiKey: Config.PUBLIC_API_KEY,
-              environment: Config.PUBLIC_ENV as Environment,
+              environment: Config.PUBLIC_ENV,
               realm: Config.PUBLIC_REALM
             },
             authManager
