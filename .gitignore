@@ -71,3 +71,7 @@ lib/
 
 # Docs
 docs/
+
+# Other
+*.local
+bundle.js
