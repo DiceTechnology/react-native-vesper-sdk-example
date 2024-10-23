@@ -42,6 +42,8 @@ android.iml
 # Cocoapods
 #
 ios/Pods
+ios/.xcode.env.local
+ios/.xcode.env
 
 # Ruby
 vendor/
