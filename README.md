@@ -1,26 +1,22 @@
-## Get started
-1. Follow these instructions to be able to install native Vesper SDK dependencies
-### iOS
-You will need to provide your credentials in ~/.netrc file to be able to authenticate during pod install phase. Add this inside your ~/.netrc file or create new file if you do not have one
+## Getting Started
 
-machine d1st2jzonb6gjl.cloudfront.net
-login <login>
-password <password>
+Follow these steps below to install the Vesper SDK dependencies and run the example application.
 
-### Android
-You will need to provide your JitPack authorisation token
-//TODO
+### 1. **Setup**
 
-2. Setup
-    Fill src/constants/CONFIG.ts file with Vesper SDK config
+- For iOS setup instructions, refer to the documentation [here](https://dicetechnology.github.io/react-native-vesper-sdk/index.html#md:ios-vespersdk-auth).
+- For Android setup instructions, refer to the documentation [here](https://dicetechnology.github.io/react-native-vesper-sdk/index.html#md:android-vespersdk-auth).
 
-3. Install dependencies
+### 2. **Configuration**
 
+Add your Vesper SDK configuration to the `src/constants/CONFIG.ts` file.
+
+### 3. **Install Dependencies**
    ```bash
    npm install
    ```
     
-4. Start the app
+### 4. **Start the app**
 
    ```bash
     # iOS
