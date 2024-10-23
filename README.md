@@ -13,6 +13,11 @@ Add your Vesper SDK configuration to the `src/constants/CONFIG.ts` file.
 
 ### 3. **Install Dependencies**
    ```bash
+   # iOS
+   npm install
+   cd ios/ && pod install
+
+   # Android
    npm install
    ```
     

@@ -4,14 +4,14 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "ios": "cd ios/ && pod install && cd ../ && react-native run-ios",
+    "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
     "bundle": "react-native bundle --entry-file index.js --platform android --bundle-output bundle.js",
     "test": "jest"
   },
   "dependencies": {
-    "@dicetechnology/react-native-vesper-sdk": "0.3.3",
+    "@dicetechnology/react-native-vesper-sdk": "0.3.5",
     "react": "18.3.1",
     "react-native": "0.75.4"
   },
