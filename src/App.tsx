@@ -4,27 +4,24 @@ import {
   View
 } from 'react-native';
 import { authManager } from './utils/DemoAuthManager';
-import { Environment, VesperSdk, VesperSdkConfig } from '@dicetechnology/react-native-vesper-sdk';
+import { VesperSdk, VesperSdkConfig } from '@dicetechnology/react-native-vesper-sdk';
 import { Player } from './components/Player';
-import Config from 'react-native-config';
+import { CONFIG } from './constants/CONFIG';
 
 function App(): React.JSX.Element {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isConfigured, setIsConfigured] = useState(false);
 
   useEffect(() => {
-    const requiredKeys: (keyof typeof Config)[] = [
-      'PUBLIC_API_KEY', 'PUBLIC_ENV', 'PUBLIC_PASSWORD', 'PUBLIC_REALM', 'PUBLIC_USERNAME'
-    ]
-    const missingKeys = requiredKeys.filter((key) => !Config[key])
+    const missingKeys = (Object.keys(CONFIG) as (keyof typeof CONFIG)[]).filter((key) => !CONFIG[key])
     if (missingKeys.length) {
-      console.error(`Make sure to configure the following keys in '.env.local': ${missingKeys.join(', ')}`);
+      console.error(`Make sure to configure the following keys in './src/constants/CONFIG.ts': ${missingKeys.join(', ')}`);
       return;
     }
 
     authManager.login(
-      Config.PUBLIC_USERNAME,
-      Config.PUBLIC_PASSWORD
+      CONFIG.PUBLIC_USERNAME,
+      CONFIG.PUBLIC_PASSWORD
     ).then(() => {
       setIsLoggedIn(true);
     }, (error) => {
@@ -46,9 +43,9 @@ function App(): React.JSX.Element {
         onPress={() => {
           const config: VesperSdkConfig = {
             apiConfig: {
-              apiKey: Config.PUBLIC_API_KEY,
-              environment: Config.PUBLIC_ENV,
-              realm: Config.PUBLIC_REALM
+              apiKey: CONFIG.PUBLIC_API_KEY,
+              environment: CONFIG.PUBLIC_ENV,
+              realm: CONFIG.PUBLIC_REALM
             },
             authManager
           };
