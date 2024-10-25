@@ -6,7 +6,7 @@ export function Player() {
     const playerRef = useRef<PlayerView>(null);
     const [isLive, setIsLive] = useState(false);
     const toggleSwitch = () => setIsLive(previousState => !previousState);
-    const [videoId, setVideoId] = useState('701245');
+    const [videoId, setVideoId] = useState('');
 
     return (
         <View style={styles.container}>

@@ -6,6 +6,39 @@ class DemoAuthManager implements AuthManager {
     private _authToken?: string;
     private _refreshToken?: string;
 
+    public async guestCheckin(): Promise<void> {
+        if (this._authToken) {
+            console.log('Already logged in!');
+            return;
+        }
+
+        console.info(`Logging in as guest...`);
+
+        const baseUrl = getApiBaseUrl(CONFIG.ENV);
+
+        const response = await fetch(`${baseUrl}/login/guest/checkin`, {
+            "headers": {
+                "accept": "application/json, text/plain, */*",
+                "app": "dice",
+                "content-type": "application/json",
+                "realm": CONFIG.REALM,
+                "x-api-key": CONFIG.API_KEY,
+            },
+            "method": "POST",
+            "mode": "cors"
+        });
+
+        const json = await response.json();
+    
+        if (response.ok) {
+            this._authToken = json.authorisationToken;
+            this._refreshToken = json.refreshToken;
+            console.info(`Logged in as guest!`);
+        } else {
+            throw new Error(`Failed to log in! ${json.code} - ${json.messages.join()}`)
+        }
+    }
+
     public async login(id: string, secret: string): Promise<void> {
         if (this._authToken) {
             console.log('Already logged in!');
@@ -14,15 +47,15 @@ class DemoAuthManager implements AuthManager {
 
         console.info(`Logging in with '${id}'...`);
 
-        const baseUrl = getApiBaseUrl(CONFIG.PUBLIC_ENV);
+        const baseUrl = getApiBaseUrl(CONFIG.ENV);
 
         const response = await fetch(`${baseUrl}/login`, {
             "headers": {
                 "accept": "application/json, text/plain, */*",
                 "app": "dice",
                 "content-type": "application/json",
-                "realm": CONFIG.PUBLIC_REALM,
-                "x-api-key": CONFIG.PUBLIC_API_KEY,
+                "realm": CONFIG.REALM,
+                "x-api-key": CONFIG.API_KEY,
             },
             "body": JSON.stringify({
                 id,
@@ -64,7 +97,7 @@ class DemoAuthManager implements AuthManager {
     public async refreshAuthToken(authToken: string): Promise<string> {
         console.info(`Requesting auth token refresh...`);
 
-        const baseUrl = getApiBaseUrl(CONFIG.PUBLIC_ENV);
+        const baseUrl = getApiBaseUrl(CONFIG.ENV);
         
         const response = await fetch(`${baseUrl}/token/refresh`, {
             "headers": {
@@ -72,8 +105,8 @@ class DemoAuthManager implements AuthManager {
                 "app": "dice",
                 "authorization": `Bearer ${authToken}`,
                 "content-type": "application/json",
-                "realm": CONFIG.PUBLIC_REALM,
-                "x-api-key": CONFIG.PUBLIC_API_KEY,
+                "realm": CONFIG.REALM,
+                "x-api-key": CONFIG.API_KEY,
             },
             "body": JSON.stringify({
                 refreshToken: this._refreshToken

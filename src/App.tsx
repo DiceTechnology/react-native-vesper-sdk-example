@@ -13,21 +13,23 @@ function App(): React.JSX.Element {
   const [isConfigured, setIsConfigured] = useState(false);
 
   useEffect(() => {
-    const missingKeys = (Object.keys(CONFIG) as (keyof typeof CONFIG)[]).filter((key) => !CONFIG[key])
+    const requiredKeys: (keyof typeof CONFIG)[] = ['API_KEY', 'REALM'];
+    const missingKeys = requiredKeys.filter((key) => !CONFIG[key])
     if (missingKeys.length) {
       console.error(`Make sure to configure the following keys in './src/constants/CONFIG.ts': ${missingKeys.join(', ')}`);
       return;
     }
 
-    authManager.login(
-      CONFIG.PUBLIC_USERNAME,
-      CONFIG.PUBLIC_PASSWORD
-    ).then(() => {
+    const { USERNAME, PASSWORD } = CONFIG;
+    const loginPromise = USERNAME && PASSWORD
+      ? authManager.login(USERNAME, PASSWORD)
+      : authManager.guestCheckin();
+
+    loginPromise.then(() => {
       setIsLoggedIn(true);
     }, (error) => {
       console.error(error.message);
     });
-
   }, []);
 
   return (
@@ -43,9 +45,9 @@ function App(): React.JSX.Element {
         onPress={() => {
           const config: VesperSdkConfig = {
             apiConfig: {
-              apiKey: CONFIG.PUBLIC_API_KEY,
-              environment: CONFIG.PUBLIC_ENV,
-              realm: CONFIG.PUBLIC_REALM
+              apiKey: CONFIG.API_KEY,
+              environment: CONFIG.ENV,
+              realm: CONFIG.REALM
             },
             authManager
           };

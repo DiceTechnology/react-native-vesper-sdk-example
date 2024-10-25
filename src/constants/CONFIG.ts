@@ -3,11 +3,12 @@ import { Config } from "../types/Config";
 
 // TODO:
 // Fill these out before running the app
+// If the USERNAME and PASSWORD is left empty, the app will try to perform a guest checkin instead. 
 
 export const CONFIG: Config = {
-    PUBLIC_API_KEY: '',
-    PUBLIC_ENV: Environment.PRODUCTION,
-    PUBLIC_PASSWORD: '',
-    PUBLIC_REALM: '',
-    PUBLIC_USERNAME: ''
+    API_KEY: '',
+    ENV: Environment.PRODUCTION,
+    PASSWORD: '',
+    REALM: '',
+    USERNAME: ''
 };
