@@ -4,6 +4,7 @@ import {
   View
 } from 'react-native';
 import { authManager } from './utils/DemoAuthManager';
+import type { PlayerViewEvent } from '@dicetechnology/react-native-vesper-sdk';
 import { VesperSdk, VesperSdkConfig } from '@dicetechnology/react-native-vesper-sdk';
 import { Player } from './components/Player';
 import { CONFIG } from './constants/CONFIG';

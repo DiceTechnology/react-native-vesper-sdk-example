@@ -1,15 +1,34 @@
 import { PlayerView, ResolvableSource } from "@dicetechnology/react-native-vesper-sdk";
+import type { PlayerViewEvent } from '@dicetechnology/react-native-vesper-sdk';
 import { useRef, useState } from "react";
 import { View, TextInput, Text, Switch, Button, StyleSheet } from "react-native";
+import Orientation from 'react-native-orientation-locker';
 
 export function Player() {
     const playerRef = useRef<PlayerView>(null);
     const [isLive, setIsLive] = useState(false);
     const toggleSwitch = () => setIsLive(previousState => !previousState);
     const [videoId, setVideoId] = useState('');
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    const handlePlayerViewEvent = (event: PlayerViewEvent) => {
+        console.info(`PlayerViewEvent: ${JSON.stringify(event)}`);
+
+        // Check if the event is a fullscreen button tap
+        if (event.name === 'fullscreenButtonTap' && event.type === 'view') {
+            const eventData = JSON.parse(event.data);
+            if (eventData?.isFullscreen == false) {
+                setIsFullscreen(true);
+                Orientation.lockToLandscapeLeft();
+            } else {
+                setIsFullscreen(false);
+                Orientation.lockToPortrait();
+            }
+        }
+    }
 
     return (
-        <View style={styles.container}>
+        <View style={isFullscreen ? styles.fullscreenContainer : styles.container}>
             <TextInput
                 style={styles.input}
                 placeholder="Video id"
@@ -36,8 +55,9 @@ export function Player() {
             />
             <PlayerView
                 ref={playerRef}
-                style={styles.videoBox}
-                onPlayerViewEvent={(e) => { console.info((`PlayerViewEvent: ${JSON.stringify(e)}`)); }}
+                style={isFullscreen ? styles.fullscreenVideoBox : styles.videoBox}
+                onPlayerViewEvent={handlePlayerViewEvent}
+                isFullscreen={isFullscreen}
             />
             <View style={{ height: 20 }} />
             <View style={styles.buttonContainer}>
@@ -64,7 +84,7 @@ export function Player() {
                 <View style={styles.optionButton} />
                 <Button
                     title="Seek"
-                    onPress={() => {
+                    onPress={() => {                        
                         playerRef.current?.seekTo(100);
                     }}
                 />
@@ -77,13 +97,31 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
+    },
+    fullscreenContainer: {
+        flex: 1,
+        backgroundColor: 'black',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
     videoBox: {
         width: 320,
         height: 180,
         marginVertical: 20,
         backgroundColor: 'black'
+    },
+    fullscreenVideoBox: {
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'black',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        zIndex: 1
     },
     optionButton: {
         marginLeft: 6,
