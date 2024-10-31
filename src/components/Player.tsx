@@ -15,9 +15,9 @@ export function Player() {
         console.info(`PlayerViewEvent: ${JSON.stringify(event)}`);
 
         // Check if the event is a fullscreen button tap
-        if (event.name === 'fullscreenButtonTap' && event.type === 'view') {
+        if (event.name === 'fullscreenButtonTap' && event.type === 'view' && event.data != null) {
             const eventData = JSON.parse(event.data);
-            if (eventData?.isFullscreen == false) {
+            if (!eventData.isFullscreen) {
                 setIsFullscreen(true);
                 Orientation.lockToLandscapeLeft();
             } else {
