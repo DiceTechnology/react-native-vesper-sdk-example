@@ -10,5 +10,7 @@ export const CONFIG: Config = {
     ENV: Environment.PRODUCTION,
     PASSWORD: '',
     REALM: '',
-    USERNAME: ''
+    USERNAME: '',
+    IS_LIVE: false,
+    VIDEO_ID: '85158',
 };

@@ -3,13 +3,14 @@ import type { PlayerViewEvent } from '@dicetechnology/react-native-vesper-sdk';
 import { useRef, useState } from "react";
 import { View, TextInput, Text, Switch, Button, StyleSheet } from "react-native";
 import Orientation from 'react-native-orientation-locker';
+import { CONFIG } from "../constants/CONFIG";
 
 export function Player() {
     const playerRef = useRef<PlayerView>(null);
     const [isLive, setIsLive] = useState(false);
     const toggleSwitch = () => setIsLive(previousState => !previousState);
-    const [videoId, setVideoId] = useState('');
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [videoId, setVideoId] = useState(CONFIG.VIDEO_ID);
+    const [isFullscreen, setIsFullscreen] = useState(CONFIG.IS_LIVE);
 
     const handlePlayerViewEvent = (event: PlayerViewEvent) => {
         console.info(`PlayerViewEvent: ${JSON.stringify(event)}`);

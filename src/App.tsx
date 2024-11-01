@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
+  Text,
   View
 } from 'react-native';
 import { authManager } from './utils/DemoAuthManager';
-import type { PlayerViewEvent } from '@dicetechnology/react-native-vesper-sdk';
 import { VesperSdk, VesperSdkConfig } from '@dicetechnology/react-native-vesper-sdk';
 import { Player } from './components/Player';
 import { CONFIG } from './constants/CONFIG';
 
 function App(): React.JSX.Element {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isConfigured, setIsConfigured] = useState(false);
 
   useEffect(() => {
@@ -26,11 +25,22 @@ function App(): React.JSX.Element {
       ? authManager.login(USERNAME, PASSWORD)
       : authManager.guestCheckin();
 
-    loginPromise.then(() => {
-      setIsLoggedIn(true);
-    }, (error) => {
-      console.error(error.message);
-    });
+    loginPromise.then(
+      () => {
+        VesperSdk.setup({
+          apiConfig: {
+            realm: CONFIG.REALM,
+            environment: CONFIG.ENV,
+            apiKey: CONFIG.API_KEY,
+          },
+          authManager,
+        });
+        setIsConfigured(true);
+      },
+      (error) => {
+        console.error(error.message);
+      }
+    );
   }, []);
 
   return (
@@ -56,7 +66,7 @@ function App(): React.JSX.Element {
           VesperSdk.setup(config);
           setIsConfigured(true)
         }} />
-      {isLoggedIn && isConfigured ? <Player /> : null}
+      {isConfigured ? <Player /> : <Text>Logging in...</Text>}
     </View>
   );
 }
