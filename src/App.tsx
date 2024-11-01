@@ -27,15 +27,17 @@ function App(): React.JSX.Element {
 
     loginPromise.then(
       () => {
-        VesperSdk.setup({
+        const config: VesperSdkConfig = {
           apiConfig: {
-            realm: CONFIG.REALM,
-            environment: CONFIG.ENV,
             apiKey: CONFIG.API_KEY,
+            environment: CONFIG.ENV,
+            realm: CONFIG.REALM
           },
-          authManager,
-        });
-        setIsConfigured(true);
+          authManager
+        };
+        console.log('Configuring Vesper SDK:', { apiConfig: config.apiConfig });
+        VesperSdk.setup(config);
+        setIsConfigured(true)
       },
       (error) => {
         console.error(error.message);
@@ -51,21 +53,6 @@ function App(): React.JSX.Element {
         alignItems: "center",
       }}
     >
-      <Button
-        title="Configure Vesper SDK"
-        onPress={() => {
-          const config: VesperSdkConfig = {
-            apiConfig: {
-              apiKey: CONFIG.API_KEY,
-              environment: CONFIG.ENV,
-              realm: CONFIG.REALM
-            },
-            authManager
-          };
-          console.log('Configuring Vesper SDK:', { apiConfig: config.apiConfig });
-          VesperSdk.setup(config);
-          setIsConfigured(true)
-        }} />
       {isConfigured ? <Player /> : <Text>Logging in...</Text>}
     </View>
   );

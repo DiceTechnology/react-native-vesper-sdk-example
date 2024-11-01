@@ -1,5 +1,7 @@
 package com.rnvespersdkexample
 
+import android.content.res.Configuration
+import com.dice.vesper.rn.android.VesperPlayerPipService
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
@@ -19,4 +21,17 @@ class MainActivity : ReactActivity() {
    */
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+
+    override fun onPictureInPictureModeChanged(
+        isInPictureInPictureMode: Boolean,
+        newConfig: Configuration
+    ) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        VesperPlayerPipService.onPictureInPictureModeChanged(isInPictureInPictureMode);
+    }
+
+    override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
+        VesperPlayerPipService.onUserLeaveHint();
+    }
 }
