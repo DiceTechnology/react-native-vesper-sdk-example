@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Button,
+  Text,
   View
 } from 'react-native';
 import { authManager } from './utils/DemoAuthManager';
@@ -9,7 +10,6 @@ import { Player } from './components/Player';
 import { CONFIG } from './constants/CONFIG';
 
 function App(): React.JSX.Element {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isConfigured, setIsConfigured] = useState(false);
 
   useEffect(() => {
@@ -25,11 +25,24 @@ function App(): React.JSX.Element {
       ? authManager.login(USERNAME, PASSWORD)
       : authManager.guestCheckin();
 
-    loginPromise.then(() => {
-      setIsLoggedIn(true);
-    }, (error) => {
-      console.error(error.message);
-    });
+    loginPromise.then(
+      () => {
+        const config: VesperSdkConfig = {
+          apiConfig: {
+            apiKey: CONFIG.API_KEY,
+            environment: CONFIG.ENV,
+            realm: CONFIG.REALM
+          },
+          authManager
+        };
+        console.log('Configuring Vesper SDK:', { apiConfig: config.apiConfig });
+        VesperSdk.setup(config);
+        setIsConfigured(true)
+      },
+      (error) => {
+        console.error(error.message);
+      }
+    );
   }, []);
 
   return (
@@ -40,22 +53,7 @@ function App(): React.JSX.Element {
         alignItems: "center",
       }}
     >
-      <Button
-        title="Configure Vesper SDK"
-        onPress={() => {
-          const config: VesperSdkConfig = {
-            apiConfig: {
-              apiKey: CONFIG.API_KEY,
-              environment: CONFIG.ENV,
-              realm: CONFIG.REALM
-            },
-            authManager
-          };
-          console.log('Configuring Vesper SDK:', { apiConfig: config.apiConfig });
-          VesperSdk.setup(config);
-          setIsConfigured(true)
-        }} />
-      {isLoggedIn && isConfigured ? <Player /> : null}
+      {isConfigured ? <Player /> : <Text>Logging in...</Text>}
     </View>
   );
 }
