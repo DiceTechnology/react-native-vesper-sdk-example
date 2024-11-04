@@ -12,5 +12,5 @@ export const CONFIG: Config = {
     REALM: '',
     USERNAME: '',
     IS_LIVE: false,
-    VIDEO_ID: '85158',
+    VIDEO_ID: '',
 };
