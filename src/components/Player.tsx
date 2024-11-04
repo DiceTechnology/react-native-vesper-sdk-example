@@ -8,6 +8,7 @@ import { CONFIG } from "../constants/CONFIG";
 export function Player() {
     const playerRef = useRef<PlayerView>(null);
     const [isLive, setIsLive] = useState(false);
+    const [isPipActive, setIsPipActive] = useState(false);
     const toggleSwitch = () => setIsLive(previousState => !previousState);
     const [videoId, setVideoId] = useState(CONFIG.VIDEO_ID);
     const [isFullscreen, setIsFullscreen] = useState(CONFIG.IS_LIVE);
@@ -25,71 +26,83 @@ export function Player() {
                 setIsFullscreen(false);
                 Orientation.lockToPortrait();
             }
+        } else if (event.name === 'enterPip') {
+            setIsPipActive(true)
+        } else if (event.name === 'exitPip'){
+            setIsPipActive(false)
         }
     }
 
     return (
         <View style={isFullscreen ? styles.fullscreenContainer : styles.container}>
-            <TextInput
-                style={styles.input}
-                placeholder="Video id"
-                value={videoId}
-                onChangeText={text => setVideoId(text)}
-            />
-            <View style={{ height: 20 }} />
-            <View style={styles.row}>
-                <Text>{isLive ? "Live  " : "VOD  "}</Text>
-                <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={isLive ? "#f5dd4b" : "#f4f3f4"}
-                    onValueChange={toggleSwitch}
-                    value={isLive}
-                />
-            </View>
-            <Button
-                title="Load"
-                onPress={() => {
-                    const source: ResolvableSource = { id: videoId, isLive: isLive };
-                    console.info('Loading:', source);
-                    playerRef.current?.load(source);
-                }}
-            />
+            {!isPipActive && 
+                <View>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Video id"
+                        value={videoId}
+                        onChangeText={text => setVideoId(text)}
+                    />
+                    <View style={{ height: 20 }} />
+                    <View style={styles.row}>
+                        <Text>{isLive ? "Live  " : "VOD  "}</Text>
+                        <Switch
+                            trackColor={{ false: "#767577", true: "#81b0ff" }}
+                            thumbColor={isLive ? "#f5dd4b" : "#f4f3f4"}
+                            onValueChange={toggleSwitch}
+                            value={isLive}
+                        />
+                    </View>
+                    <Button
+                        title="Load"
+                        onPress={() => {
+                            const source: ResolvableSource = { id: videoId, isLive: isLive };
+                            console.info('Loading:', source);
+                            playerRef.current?.load(source);
+                        }}
+                    />
+                </View>
+            }
             <PlayerView
                 ref={playerRef}
                 style={isFullscreen ? styles.fullscreenVideoBox : styles.videoBox}
                 onPlayerViewEvent={handlePlayerViewEvent}
                 isFullscreen={isFullscreen}
             />
-            <View style={{ height: 20 }} />
-            <View style={styles.buttonContainer}>
-                <Button
-                    title="Play"
-                    onPress={() => {
-                        playerRef.current?.play();
-                    }}
-                />
-                <View style={styles.optionButton} />
-                <Button
-                    title="Pause"
-                    onPress={() => {
-                        playerRef.current?.pause();
-                    }}
-                />
-                <View style={styles.optionButton} />
-                <Button
-                    title="Unload"
-                    onPress={() => {
-                        playerRef.current?.unload();
-                    }}
-                />
-                <View style={styles.optionButton} />
-                <Button
-                    title="Seek"
-                    onPress={() => {                        
-                        playerRef.current?.seekTo(100);
-                    }}
-                />
-            </View>
+            {!isPipActive && 
+                <View>
+                    <View style={{ height: 20 }} />
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            title="Play"
+                            onPress={() => {
+                                playerRef.current?.play();
+                            }}
+                        />
+                        <View style={styles.optionButton} />
+                        <Button
+                            title="Pause"
+                            onPress={() => {
+                                playerRef.current?.pause();
+                            }}
+                        />
+                        <View style={styles.optionButton} />
+                        <Button
+                            title="Unload"
+                            onPress={() => {
+                                playerRef.current?.unload();
+                            }}
+                        />
+                        <View style={styles.optionButton} />
+                        <Button
+                            title="Seek"
+                            onPress={() => {                        
+                                playerRef.current?.seekTo(100);
+                            }}
+                        />
+                    </View>
+                </View>
+            }
         </View>
     );
 }
