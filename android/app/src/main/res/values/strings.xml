@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RnVesperSdkExample</string>
+    <string name="vesper_cast_receiver_id"></string>
 </resources>
