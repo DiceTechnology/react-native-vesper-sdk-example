@@ -7,7 +7,7 @@ import { CONFIG } from "../constants/CONFIG";
 
 export function Player() {
     const playerRef = useRef<PlayerView>(null);
-    const [isLive, setIsLive] = useState(false);
+    const [isLive, setIsLive] = useState(CONFIG.IS_LIVE);
     const [isPipActive, setIsPipActive] = useState(false);
     const toggleSwitch = () => setIsLive(previousState => !previousState);
     const [videoId, setVideoId] = useState(CONFIG.VIDEO_ID);
