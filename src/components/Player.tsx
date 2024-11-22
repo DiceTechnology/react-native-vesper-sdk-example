@@ -11,7 +11,7 @@ export function Player() {
     const [isPipActive, setIsPipActive] = useState(false);
     const toggleSwitch = () => setIsLive(previousState => !previousState);
     const [videoId, setVideoId] = useState(CONFIG.VIDEO_ID);
-    const [isFullscreen, setIsFullscreen] = useState(CONFIG.IS_LIVE);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const handlePlayerViewEvent = (event: PlayerViewEvent) => {
         console.info(`PlayerViewEvent: ${JSON.stringify(event)}`);
