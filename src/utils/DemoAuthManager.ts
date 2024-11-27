@@ -119,7 +119,7 @@ class DemoAuthManager implements AuthManager {
 
         this._authToken = json.authorisationToken;
         if (json.refreshToken) {
-            this._refreshToken = json.refreshToken
+            this._refreshToken = json.refreshToken;
         }
 
         if (!this._authToken) {
