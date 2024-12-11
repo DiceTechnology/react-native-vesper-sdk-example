@@ -11,7 +11,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@dicetechnology/react-native-vesper-sdk": "0.3.10",
+    "@dicetechnology/react-native-vesper-sdk": "0.3.12",
     "react": "18.3.1",
     "react-native": "0.75.4",
     "react-native-orientation-locker": "1.7.0"
