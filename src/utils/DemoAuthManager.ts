@@ -118,8 +118,10 @@ class DemoAuthManager implements AuthManager {
         const json = await response.json();
 
         this._authToken = json.authorisationToken;
-        this._refreshToken = json.refreshToken
-        
+        if (json.refreshToken) {
+            this._refreshToken = json.refreshToken;
+        }
+
         if (!this._authToken) {
             console.error('Invalid API response!');
             throw new Error('Invalid API response!');
