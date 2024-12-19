@@ -30,7 +30,8 @@ allprojects {
             }
         }
         maven {
-            url "https://jitpack.io"
+            // Endeavor Streaming repository
+            url "https://d1yvb7bfbv0w4t.cloudfront.net/"
             credentials { username authToken }
         }
     }
