@@ -13,6 +13,16 @@ export function Player() {
     const [videoId, setVideoId] = useState(CONFIG.VIDEO_ID);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
+    const _onOrientationDidChange = (orientation) => {
+        if (orientation == 'PORTRAIT') {
+            setIsFullscreen(false);
+        } else {
+            setIsFullscreen(true);
+        }
+    };
+    
+    Orientation.addOrientationListener(_onOrientationDidChange);
+
     const handlePlayerViewEvent = (event: PlayerViewEvent) => {
         console.info(`PlayerViewEvent: ${JSON.stringify(event)}`);
 
