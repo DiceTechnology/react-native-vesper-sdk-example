@@ -1,9 +1,11 @@
 import { PlayerView, ResolvableSource } from "@dicetechnology/react-native-vesper-sdk";
-import type { PlayerViewEvent } from '@dicetechnology/react-native-vesper-sdk';
 import { useRef, useState } from "react";
 import { View, TextInput, Text, Switch, Button, StyleSheet } from "react-native";
 import Orientation from 'react-native-orientation-locker';
 import { CONFIG } from "../constants/CONFIG";
+
+import { OrientationType } from 'react-native-orientation-locker';
+import type { ErrorData, FullScreenButtonTapData, PlayerStateChangedData } from '@dicetechnology/react-native-vesper-sdk';
 
 export function Player() {
     const playerRef = useRef<PlayerView>(null);
@@ -13,8 +15,8 @@ export function Player() {
     const [videoId, setVideoId] = useState(CONFIG.VIDEO_ID);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
-    const _onOrientationDidChange = (orientation) => {
-        if (orientation == 'PORTRAIT') {
+    const _onOrientationDidChange = (orientation: OrientationType) => {
+        if (orientation == OrientationType.PORTRAIT) {
             setIsFullscreen(false);
         } else {
             setIsFullscreen(true);
@@ -23,25 +25,42 @@ export function Player() {
     
     Orientation.addOrientationListener(_onOrientationDidChange);
 
-    const handlePlayerViewEvent = (event: PlayerViewEvent) => {
-        console.info(`PlayerViewEvent: ${JSON.stringify(event)}`);
+    const handlePlayerStateChangedEvent = (data: PlayerStateChangedData) => {
+        console.info(`Event: ${JSON.stringify(data)}`);
+    };
 
-        // Check if the event is a fullscreen button tap
-        if (event.name === 'fullscreenButtonTap' && event.type === 'view' && event.data != null) {
-            const eventData = JSON.parse(event.data);
-            if (!eventData.isFullscreen) {
-                setIsFullscreen(true);
-                Orientation.lockToLandscapeLeft();
-            } else {
-                setIsFullscreen(false);
-                Orientation.lockToPortrait();
-            }
-        } else if (event.name === 'enterPip') {
-            setIsPipActive(true)
-        } else if (event.name === 'exitPip'){
-            setIsPipActive(false)
+    const handleFullScreenButtonTapEvent = (data: FullScreenButtonTapData) => {
+        console.info(`Event: ${JSON.stringify(data)}`);
+        if (!data.isFullscreen) {
+            setIsFullscreen(true);
+            Orientation.lockToLandscapeLeft();
+        } else {
+            setIsFullscreen(false);
+            Orientation.lockToPortrait();
         }
-    }
+    };
+
+    const handleCloseButtonTapEvent = () => {
+        console.info('Event: CloseButtonTapEvent}');
+    };
+
+    const handlePlaybackErrorEvent = (data: ErrorData) => {
+        console.info(`Event: ${JSON.stringify(data)}`);
+    };
+
+    const handleHttpErrorEvent = (data: ErrorData) => {
+        console.info(`Event: ${JSON.stringify(data)}`);
+    };
+
+    const handleEnterPipEvent = () => {
+        console.info('Event: EnterPip');
+        setIsPipActive(true);
+    };
+
+    const handleExitPipEvent = () => {
+        console.info('Event: ExitPip');
+        setIsPipActive(false);
+    };
 
     return (
         <View style={isFullscreen ? styles.fullscreenContainer : styles.container}>
@@ -68,7 +87,7 @@ export function Player() {
                         onPress={() => {
                             const source: ResolvableSource = { id: videoId, isLive: isLive };
                             console.info('Loading:', source);
-                            playerRef.current?.load(source);
+                            playerRef.current?.load({source: source});
                         }}
                     />
                 </View>
@@ -76,8 +95,14 @@ export function Player() {
             <PlayerView
                 ref={playerRef}
                 style={isFullscreen ? styles.fullscreenVideoBox : styles.videoBox}
-                onPlayerViewEvent={handlePlayerViewEvent}
-                isFullscreen={isFullscreen}
+                onPlayerStateChangedEvent={handlePlayerStateChangedEvent}
+                onFullScreenButtonTapEvent={handleFullScreenButtonTapEvent}
+                onCloseButtonTapEvent={handleCloseButtonTapEvent}
+                onPlaybackErrorEvent={handlePlaybackErrorEvent}
+                onHttpErrorEvent={handleHttpErrorEvent}
+                onEnterPipEvent={handleEnterPipEvent}
+                onExitPipEvent={handleExitPipEvent}
+                isFullscreenData={{ isFullscreen: isFullscreen }}
             />
             {!isPipActive && 
                 <View>
@@ -107,7 +132,7 @@ export function Player() {
                         <Button
                             title="Seek"
                             onPress={() => {                        
-                                playerRef.current?.seekTo(100);
+                                playerRef.current?.seekToPosition({position: 100});
                             }}
                         />
                     </View>
