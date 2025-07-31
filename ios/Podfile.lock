@@ -1239,7 +1239,7 @@ PODS:
     - Yoga
   - react-native-orientation-locker (1.7.0):
     - React-Core
-  - react-native-vesper-sdk (1.0.0):
+  - react-native-vesper-sdk (1.0.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1766,7 +1766,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: b982d5bba94a8bc073bda48f0d27c9b28417fae3
   React-microtasksnativemodule: 2cec1d6e126598df0f165268afa231174dd1a611
   react-native-orientation-locker: 5819fd23ca89cbac0d736fb4314745f62716d517
-  react-native-vesper-sdk: e680c54cf21ad90dcb59e9b95ef58407a4ed6b92
+  react-native-vesper-sdk: a897d9ca9f3e97f8501a826b65f63d05e87e95b9
   React-nativeconfig: 8c83d992b9cc7d75b5abe262069eaeea4349f794
   React-NativeModulesApple: 9f7920224a3b0c7d04d77990067ded14cee3c614
   React-perflogger: 59e1a3182dca2cee7b9f1f7aab204018d46d1914
