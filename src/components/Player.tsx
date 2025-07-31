@@ -64,7 +64,7 @@ export function Player() {
 
     return (
         <View style={isFullscreen ? styles.fullscreenContainer : styles.container}>
-            {!isPipActive && 
+            {!isFullscreen && !isPipActive && 
                 <View>
                     <TextInput
                         style={styles.input}
@@ -104,7 +104,7 @@ export function Player() {
                 onExitPipEvent={handleExitPipEvent}
                 isFullscreenData={{ isFullscreen: isFullscreen }}
             />
-            {!isPipActive && 
+            {!isFullscreen && !isPipActive && 
                 <View>
                     <View style={{ height: 20 }} />
                     <View style={styles.buttonContainer}>
