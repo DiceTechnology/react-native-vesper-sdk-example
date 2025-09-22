@@ -11,19 +11,22 @@
     "test": "jest"
   },
   "dependencies": {
-    "@dicetechnology/react-native-vesper-sdk": "1.0.1",
+    "@dicetechnology/react-native-vesper-sdk": "1.1.0",
     "react": "18.3.1",
-    "react-native": "0.75.4",
+    "react-native": "0.77.0",
     "react-native-orientation-locker": "1.7.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.8",
     "@babel/preset-env": "^7.25.8",
     "@babel/runtime": "^7.25.7",
-    "@react-native/babel-preset": "0.75.4",
-    "@react-native/eslint-config": "0.75.4",
-    "@react-native/metro-config": "0.75.4",
-    "@react-native/typescript-config": "0.75.4",
+    "@react-native/babel-preset": "0.77.0",
+    "@react-native/eslint-config": "0.77.0",
+    "@react-native/metro-config": "0.77.0",
+    "@react-native/typescript-config": "0.77.0",
+    "@react-native-community/cli": "15.0.1",
+    "@react-native-community/cli-platform-android": "15.0.1",
+    "@react-native-community/cli-platform-ios": "15.0.1",
     "@types/react": "^18.2.6",
     "@types/react-native-dotenv": "^0.2.2",
     "@types/react-test-renderer": "^18.0.0",
