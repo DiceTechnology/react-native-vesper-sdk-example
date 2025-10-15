@@ -5,7 +5,7 @@ import Orientation from 'react-native-orientation-locker';
 import { CONFIG } from "../constants/CONFIG";
 
 import { OrientationType } from 'react-native-orientation-locker';
-import type { ErrorData, FullScreenButtonTapData, PlayerStateChangedData } from '@dicetechnology/react-native-vesper-sdk';
+import type { ErrorData, FullScreenButtonTapData, PlaybackPositionChangedData, PlayerStateChangedData } from '@dicetechnology/react-native-vesper-sdk';
 
 export function Player() {
     const playerRef = useRef<PlayerView>(null);
@@ -62,6 +62,10 @@ export function Player() {
         setIsPipActive(false);
     };
 
+    const handlePlaybackPositionChangedEvent = (data: PlaybackPositionChangedData) => {
+        console.info(`Event: ${JSON.stringify(data)}`);
+    };
+
     return (
         <View style={isFullscreen ? styles.fullscreenContainer : styles.container}>
             {!isFullscreen && !isPipActive && 
@@ -87,7 +91,7 @@ export function Player() {
                         onPress={() => {
                             const source: ResolvableSource = { id: videoId, isLive: isLive };
                             console.info('Loading:', source);
-                            playerRef.current?.load({source: source});
+                            playerRef.current?.load({source: source, autoPlay: true});
                         }}
                     />
                 </View>
@@ -102,7 +106,8 @@ export function Player() {
                 onHttpErrorEvent={handleHttpErrorEvent}
                 onEnterPipEvent={handleEnterPipEvent}
                 onExitPipEvent={handleExitPipEvent}
-                isFullscreenData={{ isFullscreen: isFullscreen }}
+                onPlaybackPositionChangedEvent={handlePlaybackPositionChangedEvent}
+                config={{toggles: { isFullscreen: isFullscreen, isCloseButtonHidden: false }}}
             />
             {!isFullscreen && !isPipActive && 
                 <View>
