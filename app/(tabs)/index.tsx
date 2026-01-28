@@ -1,98 +1,70 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { NativeModules, Platform, Text, View } from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+import { Player } from '@/components/Player';
+import { CONFIG } from '@/constants/CONFIG';
+import { authManager } from '@/utils/DemoAuthManager';
+import { VesperSdk, type VesperSdkConfig } from '@dicetechnology/react-native-vesper-sdk';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+  const [isConfigured, setIsConfigured] = useState(false);
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  useEffect(() => {
+    const requiredKeys: (keyof typeof CONFIG)[] = ['API_KEY', 'REALM'];
+    const missingKeys = requiredKeys.filter(key => !CONFIG[key]);
+    if (missingKeys.length) {
+      console.error(
+        `Make sure to configure the following keys in 'constants/CONFIG.ts': ${missingKeys.join(', ')}`
+      );
+      return;
+    }
+
+    const { USERNAME, PASSWORD } = CONFIG;
+    const loginPromise =
+      USERNAME && PASSWORD ? authManager.login(USERNAME, PASSWORD) : authManager.guestCheckin();
+
+    loginPromise.then(
+      () => {
+        if (Platform.OS === 'web') {
+          console.warn('Vesper SDK is not supported on web; skipping setup.');
+          return;
+        }
+
+        const { RNVesperSDK } = NativeModules as { RNVesperSDK?: object };
+        if (!RNVesperSDK) {
+          console.error(
+            'Vesper native module (RNVesperSDK) is not available. ' +
+              'Make sure you have built a dev client (expo run:ios / expo run:android) after installing @dicetechnology/react-native-vesper-sdk.'
+          );
+          return;
+        }
+
+        const config: VesperSdkConfig = {
+          apiConfig: {
+            apiKey: CONFIG.API_KEY,
+            environment: CONFIG.ENV,
+            realm: CONFIG.REALM,
+          },
+          authManager,
+        };
+        console.log('Configuring Vesper SDK:', { apiConfig: config.apiConfig });
+        VesperSdk.setup(config);
+        setIsConfigured(true);
+      },
+      error => {
+        console.error(error.message);
+      }
+    );
+  }, []);
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      {isConfigured ? <Player /> : <Text>Logging in...</Text>}
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});

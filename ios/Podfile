@@ -53,6 +53,12 @@ target 'expotest' do
   )
 
   post_install do |installer|
+    react_native_post_install(
+      installer,
+      config[:reactNativePath],
+      :mac_catalyst_enabled => false
+    )
+
     # Disable Folly coroutines - not available in prebuilt ReactNativeDependencies for RN 0.81.5
     # This prevents the 'folly/coro/Coroutine.h' file not found error
     # Patch Portability.h to set FOLLY_HAS_COROUTINES to 0
